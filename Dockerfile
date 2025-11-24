@@ -8,6 +8,6 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install Flask gunicorn
 # Copy the rest of the application code
-COPY ..
+COPY . .
 # Run the app
 CMD ["python3", "app.py"]
