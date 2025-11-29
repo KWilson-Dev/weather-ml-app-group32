@@ -44,19 +44,19 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: kwilsonuni
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
       - name: Build Docker image
         run: |
           docker build -t weather-ml-app:test .
-          docker tag weather-ml-app:test ${{ secrets.DOCKER_USERNAME }}/weather-ml-app:latest
-          docker tag weather-ml-app:test ${{ secrets.DOCKER_USERNAME }}/weather-ml-app:${{ github.sha }}
+          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:latest
+          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:${{ github.sha }}
       
       - name: Push to Docker Hub
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/weather-ml-app:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/weather-ml-app:${{ github.sha }}
+          docker push kwilsonuni/weather-ml-app:latest
+          docker push kwilsonuni/weather-ml-app:${{ github.sha }}
       
       - name: Test container launch
         run: |
