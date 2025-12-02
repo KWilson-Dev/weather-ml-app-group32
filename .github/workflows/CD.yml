@@ -14,25 +14,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v3
+      - name: Deploy via SSH and kubectl
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          version: 'latest'
-      
-      - name: Configure kubectl
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
-      
-      - name: Update deployment image
-        run: |
-          kubectl set image deployment/weather-ml-app weather-ml-app=kwilsonuni/weather-ml-app:${{ github.sha }} --record
-      
-      - name: Wait for rollout to complete
-        run: |
-          kubectl rollout status deployment/weather-ml-app --timeout=5m
-      
-      - name: Verify deployment
-        run: |
-          kubectl get pods -l app=weather-ml-app
-          kubectl get service weather-ml-app
+          host: ${{ secrets.PROD_HOST }}
+          username: ubuntu
+          key: ${{ secrets.PROD_SSH_KEY }}
+          port: 22
+          args: "-o StrictHostKeyChecking=no"
+          script: |
+            echo "Checking Kubernetes availability..."
+            if ! kubectl get nodes >/dev/null 2>&1; then
+              echo "Kubernetes is not responding. If you're using minikube and it stops sometimes, you may need to start it manually on the server."
+            fi
+
+            echo "Updating deployment image to kwilsonuni/weather-ml-app:${{ github.sha }}..."
+            kubectl set image deployment/weather-ml-app \
+              weather-ml-app=kwilsonuni/weather-ml-app:${{ github.sha }}
+
+            echo "Waiting for rollout to complete..."
+            kubectl rollout status deployment/weather-ml-app --timeout=5m
+
+            echo "Pods for app=weather-ml-app:"
+            kubectl get pods -l app=weather-ml-app
+
+            echo "Service status:"
+            kubectl get service weather-ml-service
