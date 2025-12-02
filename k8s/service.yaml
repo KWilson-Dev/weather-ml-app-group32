@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: weather-ml-app
+  labels:
+    app: weather-ml-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: weather-ml-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+    name: http
