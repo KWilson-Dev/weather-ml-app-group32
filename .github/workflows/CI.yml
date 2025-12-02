@@ -41,22 +41,9 @@ jobs:
         run: |
           python -m pytest tests/integration_test.py -v
       
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: kwilsonuni
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
       - name: Build Docker image
         run: |
           docker build -t weather-ml-app:test .
-          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:latest
-          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:${{ github.sha }}
-      
-      - name: Push to Docker Hub
-        run: |
-          docker push kwilsonuni/weather-ml-app:latest
-          docker push kwilsonuni/weather-ml-app:${{ github.sha }}
       
       - name: Test container launch
         run: |
@@ -65,3 +52,16 @@ jobs:
           docker exec test-container python --version
           docker stop test-container
           docker rm test-container
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: kwilsonuni
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Tag and push Docker image
+        run: |
+          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:latest
+          docker tag weather-ml-app:test kwilsonuni/weather-ml-app:${{ github.sha }}
+          docker push kwilsonuni/weather-ml-app:latest
+          docker push kwilsonuni/weather-ml-app:${{ github.sha }}
