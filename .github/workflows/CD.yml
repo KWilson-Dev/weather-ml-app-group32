@@ -38,4 +38,4 @@ jobs:
             kubectl get pods -l app=weather-ml-app
 
             echo "Service status:"
-            kubectl get service weather-ml-service
+            kubectl get service weather-ml-app-service
