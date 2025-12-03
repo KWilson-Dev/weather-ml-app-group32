@@ -21,7 +21,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PROD_SSH_KEY }}
           port: 22
-          args: "-o StrictHostKeyChecking=no"
+          host_key_check: false
           script: |
             echo "Checking Kubernetes availability..."
             if ! kubectl get nodes >/dev/null 2>&1; then
