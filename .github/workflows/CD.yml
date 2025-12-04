@@ -34,6 +34,9 @@ jobs:
             kubectl set image deployment/weather-ml-app \
               weather-ml-app=kwilsonuni/weather-ml-app:latest
 
+            echo "Restarting deployment to ensure pods pull latest..."
+            kubectl rollout restart deployment/weather-ml-app
+
             echo "Waiting for rollout to complete..."
             kubectl rollout status deployment/weather-ml-app --timeout=5m
 
