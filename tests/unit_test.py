@@ -35,20 +35,17 @@ class TestUnit(unittest.TestCase):
 		test_input = np.array([269.686,1002,78,0,23,0,0,0,0]).reshape(1,-1)
 		class_result, _ = classify_weather(test_input) 
 		# Ensure that 'clear' class is returned
-		weather_classes = ['clear', 'cloudy', 'drizzly', 'foggy', 'hazey', 'misty', 'rainy', 'smokey', 'thunderstorm']
-		self.assertIn(class_result, weather_classes)
-	def test_rainy_classification_output(self):
-		test_input = np.array([279.626,998,99,1,314,0.3,0,0,88]).reshape(1,-1)
+		self.assertEqual(class_result, 'clear')
+	def test_thunderstorm_classification_output(self):
+		test_input = np.array([279.626,950,99,1,314,3,6,0,80]).reshape(1,-1)
 		class_result, _ = classify_weather(test_input) 
-		# Ensure that 'rainy' class is returned
-		weather_classes = ['clear', 'cloudy', 'drizzly', 'foggy', 'hazey', 'misty', 'rainy', 'smokey', 'thunderstorm']
-		self.assertIn(class_result, weather_classes)
+		# Ensure that 'thunderstorm' class is returned
+		self.assertEqual(class_result, 'thunderstorm')
 
 	def test_cloudy_classification_output(self):
 
 		test_input = np.array([291.15,1028,61,1,260,0,0,0,75]).reshape(1,-1)
 		class_result, _ = classify_weather(test_input) 
-
 		# Ensure that 'cloudy' class is returned
 		self.assertEqual(class_result, 'cloudy')
 if __name__ == '__main__':
