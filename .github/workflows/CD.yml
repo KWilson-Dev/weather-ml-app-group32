@@ -30,12 +30,10 @@ jobs:
               echo "Kubernetes is not responding. If you're using minikube and it stops sometimes, you may need to start it manually on the server."
             fi
 
-            echo "Updating deployment image to kwilsonuni/weather-ml-app:latest..."
+            echo "Updating deployment image to kwilsonuni/weather-ml-app..."
             kubectl set image deployment/weather-ml-app \
-              weather-ml-app=kwilsonuni/weather-ml-app:latest
+              weather-ml-app=kwilsonuni/weather-ml-app:${{github.event.workflow_run.head_sha}}
 
-            echo "Restarting deployment to ensure pods pull latest..."
-            kubectl rollout restart deployment/weather-ml-app
 
             echo "Waiting for rollout to complete..."
             kubectl rollout status deployment/weather-ml-app --timeout=5m
